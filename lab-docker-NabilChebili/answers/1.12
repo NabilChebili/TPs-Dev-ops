@@ -1,0 +1,1 @@
+docker run --name frontCont -p 9000:80 -e WS_BACK_URL='http://localhost:8080' nabilchebili/front

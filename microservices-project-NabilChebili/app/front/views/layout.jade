@@ -1,0 +1,29 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script.
+      var decrypt = function() {
+        password =  document.getElementById('password').value;
+        if (password === ""){
+          return "Le champ doit avoir une valeur"
+        }
+        const promiseOfSomeJsonData = fetch(window.location.origin+'/api/decrypt/'+password).then(r => r.json()).then(data => {
+          document.getElementById('ssdres').innerHTML = "Vous devriez regarder la -->      " + data.result;
+        });
+      }
+
+      const promiseOfSomeJsonData = fetch(window.location.origin+'/api/path/path_example').then(r => r.json()).then(data => {
+          return data;
+      });
+      window.onload = async () => {
+          let someData = await promiseOfSomeJsonData;
+          document.getElementById('time').innerHTML = someData.time;
+          document.getElementById('env').innerHTML = someData.environment;
+          document.getElementById('path').innerHTML = someData.hostname;
+          document.getElementById('hostname').innerHTML = someData.result;
+      };
+      
+  body
+    block content

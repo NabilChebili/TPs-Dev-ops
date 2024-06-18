@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "[PaaS] Is app UP ?",
+      "setup": "",
+      "run": "curl -f -LI \"$(cat paas-url)\"",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "[PaaS] Is new owner created ?",
+      "setup": "",
+      "run": "curl \"$(cat paas-url)/owners?lastName=$(cat paas-owner-name)\" -Ls -o /dev/null -w %{url_effective}",
+      "input": "",
+      "output": "11",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "[Serverless] REST owner created ?",
+      "setup": "",
+      "run": "curl -f -LI \"$(cat serverless-rest-url)/petclinic/api/owners/*/lastname/$(cat serverless-rest-owner-name)\"",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "[Serverless] Angular is UP ?",
+      "setup": "",
+      "run": "curl -f -LI \"$(cat serverless-angular-url)\"",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    }
+  ]
+}

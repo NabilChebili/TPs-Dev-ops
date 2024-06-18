@@ -1,0 +1,18 @@
+# Fill this frontend service manifest
+apiVersion: v1
+kind: Service # Specify the kind of resource to create. Here we want to create a Service object
+metadata:
+  labels:
+    app: front # Specify a label for this service object
+  name: front # Specify a name for this service object
+spec:
+  # <=============== You must fill this part ==================>
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
+status:
+  loadBalancer: {}

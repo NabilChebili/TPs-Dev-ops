@@ -1,0 +1,18 @@
+# Fill this backend service manifest
+apiVersion: v1
+kind: Service # Specify the kind of resource to create. Here we want to create a Service object
+metadata:
+  labels:
+    app: back # Specify a label for this service object
+  name: back # Specify a name for this service object
+spec:
+  # <=============== You must fill this part ==================>
+  selector:
+    app: back
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+status:
+  loadBalancer: {}

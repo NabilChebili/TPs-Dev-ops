@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment # Specify the kind of resource to create. Here we want to create a Deployment object
+metadata:
+  labels:
+    app: back # Specify a label for this deployment object
+  name: back # Specify a name for this deployment object
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: back # Allow this deployment to control pods labelled with `app: back`
+  template: # Specify template for each created pods
+    metadata:
+      labels:
+        app: back # Allow created pods to be selected by deployment with matchLabels
+    spec: 
+      # <=============== You must fill this part ==================>
+      restartPolicy: Always
+      containers:
+      - name: back
+        image: arthurmauvezin/back:1.0
+        env:
+        - name: ENVIRONMENT
+          value: "env_nabil"
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  div.table-title 
+    h3 #{title}
+  div 
+    table.table-fill
+      thead
+        tr
+          th Title
+          th Value
+          th Description
+      tr 
+        td API time
+        td#time
+        td Time returned dynamically by API (in UTC format)
+      tr 
+        td API environment
+        td#env
+        td Environment variable with which you started the API
+      tr 
+        td API called path
+        td#path
+        td Hard coded value in front which calls backend
+      tr 
+        td API hostname
+        td#hostname
+        td The host on which the API currently run
+
+  div.table-title 
+    h3 Saurez vous trouver la salle sur demande ?
+  div.result Pour trouver la Salle sur demande, dites moi qui est actuellement ministre de la magie
+    p
+      input(type='text', name='password', value='')#password
+      button(onclick='decrypt()') Trouver la salle sur demande
+      div#ssdres
+

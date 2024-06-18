@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment # Specify the kind of resource to create. Here we want to create a Deployment object
+metadata:
+  labels:
+    app: front # Specify a label for this deployment object
+  name: front # Specify a name for this deployment object
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: front # Allow this deployment to control pods labelled with `app: front`
+  template: # Specify template for each created pods
+    metadata:
+      labels:
+        app: front # Allow created pods to be selected by deployment with matchLabels
+    spec: 
+      # <=============== You must fill this part ==================>
+      restartPolicy: Always
+      containers:
+      - name: front
+        image: arthurmauvezin/front:1.1
+        env:
+        - name: WS_BACK_URL
+          value: http://20.61.177.31:8080
+        ports:
+        - containerPort: 80

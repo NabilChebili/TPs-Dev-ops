@@ -1,0 +1,19 @@
+version: '1'
+services:
+  back:
+    image: nabilchebili/backprojet:latest
+    ports:
+      - "8080:3000"
+    environment:
+      NODE_ENV: 'world'
+    volumes:
+      - appli:/app/logs/
+  front:
+    image: nabilchebili/frontprojet:latest
+    ports:
+      - "80:3000" 
+    environment:
+      API_SERVICE_URL: 'http://back:3000'
+volumes:
+  appli:
+    external: true

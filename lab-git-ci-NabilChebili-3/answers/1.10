@@ -1,0 +1,4 @@
+master : Sert à regrouper toutes les sorties officielles du produit. Normalement ce sont toutes les releases (production-ready state).
+develop : Permet de voir les dernier delivery pour la prochaine release 
+feature/[nomfeature] : Permet aux devloppeurs de creer leur code dessus.
+strange : Une branche strange (hotfix ?)

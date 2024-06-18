@@ -1,0 +1,95 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # All the following steps describes ci actions
+  ci:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+      - name: Build and push Back
+        uses: docker/build-push-action@v2
+        with:
+          context: app/back/
+          push: true
+          tags: nabilchebili/backprojet:latest
+      
+      - name: Build and push Front
+        uses: docker/build-push-action@v2
+        with:
+          context: app/front/
+          push: true
+          tags: nabilchebili/frontprojet:latest
+  
+  cd:
+    # This job depends on CI job - which means that it will execute only after ci succeeds
+    needs: ci
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # The Azure secrets as specified in Github
+    # Fill these secrets in Github parameter
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_AD_SUBSCRIPTION_ID }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Create the terraform backend
+      - name: Azure CLI script file
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage account create -n nabilchebili -g rg-nabil.chebili --sku Standard_LRS
+            az storage container create -n tfstatedevops --account-name nabilchebili
+
+      - name: Deploy infra
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
+      - name: Deploy application
+        run: |
+          az aks get-credentials -n cl-nabilchebili -g rg-nabil.chebili
+          kubectl apply -f kubernetes/
+          kubectl get svc
+      - name: Test application
+        run: |
+          curl http://51.138.80.158/
